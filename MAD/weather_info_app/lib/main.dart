@@ -1,9 +1,30 @@
+import 'dart:math'; // To generate random numbers
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(WeatherApp());
 }
 
+class WeatherService {
+  // Function to simulate fetching weather data
+  Map<String, String> fetchWeatherData(String cityName) {
+    final Random random = Random();
+    final List<String> weatherConditions = ['Sunny', 'Cloudy', 'Rainy'];
+
+    // Generate a random temperature between 15°C and 30°C
+    String temperature = '${15 + random.nextInt(16)}°C';
+
+    // Randomly select a weather condition
+    String weatherCondition = weatherConditions[random.nextInt(3)];
+
+    // Return the simulated weather data as a map
+    return {
+      'city': cityName,
+      'temperature': temperature,
+      'condition': weatherCondition,
+    };
+  }
+}
 class WeatherApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,12 +48,14 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   String temperature = '';
   String weatherCondition = '';
 
+  final Random random = Random();
+  final List<String> weatherConditions = ['Sunny', 'Cloudy', 'Rainy'];
+
   void fetchWeather() {
     // Simulate fetching weather data
     setState(() {
-      cityName = 'Sample City'; // Replace with user input
-      temperature = '${(15 + (30 - 15) * (0.5)).toStringAsFixed(1)}°C'; // Random temperature
-      weatherCondition = 'Sunny'; // Random condition
+      temperature = '${(15 + random.nextInt(16)).toString()}°C'; // Random temperature between 15°C and 30°C
+      weatherCondition = weatherConditions[random.nextInt(3)]; // Random weather condition
     });
   }
 
@@ -54,17 +77,31 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
             ),
             SizedBox(height: 10),
             ElevatedButton(
-              onPressed: fetchWeather,
+              onPressed: () {
+                if (cityName.isNotEmpty) {
+                  fetchWeather();
+                }
+              },
               child: Text('Fetch Weather'),
             ),
             SizedBox(height: 20),
-            Text('City: $cityName'),
-            Text('Temperature: $temperature'),
-            Text('Weather Condition: $weatherCondition'),
+            Text(
+              'City: ${cityName.isEmpty ? 'Enter a city' : cityName}',
+              style: TextStyle(fontSize: 18),
+            ),
+            Text(
+              'Temperature: $temperature',
+              style: TextStyle(fontSize: 18),
+            ),
+            Text(
+              'Weather Condition: $weatherCondition',
+              style: TextStyle(fontSize: 18),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
